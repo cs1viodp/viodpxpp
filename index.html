@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VIO Finance - Laporan Keuangan UKM</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eef6ff 0%,#f7f3ff 45%,#fff8ef 100%);color:#172033}
+header{background:linear-gradient(135deg,#5b21b6 0%,#2563eb 48%,#06b6d4 100%);color:white;padding:22px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;right:-70px;top:-90px;width:240px;height:240px;border-radius:50%;background:#ffffff22;box-shadow:-90px 110px 0 20px #ffffff12}
+header h1,header p{position:relative;z-index:1}
+header h1{margin:0 0 5px;font-size:24px}header p{margin:0;opacity:.9}
+nav{display:flex;gap:8px;overflow:auto;background:linear-gradient(90deg,#ffffff,#f5f3ff);padding:10px;position:sticky;top:0;z-index:3;box-shadow:0 3px 12px #312e8118}
+nav button{border:0;background:linear-gradient(135deg,#e0e7ff,#ede9fe);color:#3730a3;padding:10px 14px;border-radius:9px;white-space:nowrap;font-weight:bold;cursor:pointer}
+nav button.active{background:linear-gradient(135deg,#7c3aed,#2563eb);color:white;box-shadow:0 4px 12px #4f46e544}
+main{max-width:1200px;margin:auto;padding:16px}.page{display:none}.page.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:linear-gradient(135deg,#ffffff,#f8faff);border-radius:14px;padding:16px;box-shadow:0 5px 18px #312e8112;border:1px solid #ffffff}
+#dashboard .cards .card:nth-child(1){background:linear-gradient(135deg,#ede9fe,#ddd6fe)}
+#dashboard .cards .card:nth-child(2){background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+#dashboard .cards .card:nth-child(3){background:linear-gradient(135deg,#fee2e2,#fecaca)}
+#dashboard .cards .card:nth-child(4){background:linear-gradient(135deg,#fef3c7,#fde68a)}.label{font-size:13px;color:#667085}.value{font-size:22px;font-weight:700;margin-top:7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:#ffffffeb;border-radius:14px;padding:16px;margin-top:16px;box-shadow:0 5px 18px #312e8112;border:1px solid #ffffff}
+input,select{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:8px;margin-top:5px;background:white}
+label{font-size:13px;font-weight:bold;display:block;margin-bottom:10px}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+button.primary{background:#0b72b9;color:#fff;border:0;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer}
+button.danger{background:#dc3545;color:white;border:0;padding:7px 10px;border-radius:7px;cursor:pointer}
+button.small{border:0;padding:7px 10px;border-radius:7px;cursor:pointer;background:#eef3f8}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}th{background:#f8fafc}
+.masuk{color:#087443;font-weight:bold}.keluar{color:#b42318;font-weight:bold}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar>*{max-width:220px}
+@media(max-width:750px){.cards{grid-template-columns:repeat(2,1fr)}.grid,.formgrid{grid-template-columns:1fr}.value{font-size:18px}}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:7px 10px;border-radius:20px;background:linear-gradient(135deg,#dbeafe,#ede9fe);color:#3730a3;font-size:13px}.chip b{margin-left:4px}@media(max-width:750px){table{min-width:700px}} 
+.dashboard-chart-panel{overflow:hidden}.chart-head h3{margin:0}.chart-sub{margin:4px 0 10px;color:#667085;font-size:12px}.chart-wrap{height:300px;position:relative}.chart-wrap canvas{width:100%!important;height:100%!important}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}.modalbox{background:white;border-radius:14px;padding:20px;width:min(600px,100%);max-height:90vh;overflow:auto}.modalbox h2{margin-top:0}
+
+#cloudAuth{position:fixed;inset:0;z-index:99999;background:#eef2ff;display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto}
+#cloudAuth .auth-card{width:min(520px,100%);background:#fff;border:1px solid #dbeafe;border-radius:18px;padding:24px;box-shadow:0 20px 60px #1e1b4b22}
+#cloudAuth h2{margin:0 0 8px;color:#312e81}#cloudAuth p{line-height:1.5;color:#475569}
+#cloudAuth label{display:block;margin:12px 0 5px;font-weight:600;color:#334155}
+#cloudAuth input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}
+#cloudAuth button{border:0;border-radius:9px;padding:11px 14px;font-weight:700;cursor:pointer}
+#cloudLoginBtn{background:#4f46e5;color:#fff;width:100%;margin-top:14px}
+#cloudSaveConfig{background:#e0e7ff;color:#3730a3;margin-top:8px;width:100%}
+#cloudAuthMsg{margin-top:12px;padding:10px;border-radius:8px;background:#f1f5f9;white-space:pre-wrap;font-size:13px}
+#cloudStatus{background:#ecfeff;border-bottom:1px solid #a5f3fc;color:#155e75;padding:8px 14px;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+#cloudStatus button{border:0;border-radius:7px;padding:6px 10px;cursor:pointer;background:#cffafe;color:#155e75;font-weight:bold}
+body.cloud-locked header,body.cloud-locked nav,body.cloud-locked main,body.cloud-locked #cloudStatus{visibility:hidden}
+@media(max-width:600px){#cloudAuth .auth-card{padding:18px}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="cloud-locked">
+<div id="cloudAuth">
+  <div class="auth-card">
+    <h2>VIO Finance</h2>
+    <p>Login khusus pemilik. Data pembukuan hanya dimuat setelah autentikasi berhasil.</p>
+    <details id="cloudConfigDetails">
+      <summary style="cursor:pointer;color:#4338ca;font-weight:700">Pengaturan koneksi Supabase</summary>
+      <label for="cloudUrl">Project URL</label>
+      <input id="cloudUrl" type="url" placeholder="https://xxxx.supabase.co" autocomplete="url">
+      <label for="cloudAnonKey">Publishable / anon key</label>
+      <input id="cloudAnonKey" type="password" placeholder="sb_publishable_... atau anon key" autocomplete="off">
+      <button id="cloudSaveConfig" type="button">Simpan pengaturan di perangkat ini</button>
+      <p style="font-size:12px">Gunakan hanya publishable/anon key. Jangan masukkan service_role key atau password database.</p>
+    </details>
+    <form id="cloudLoginForm">
+      <label for="cloudEmail">Email pemilik</label>
+      <input id="cloudEmail" type="email" required autocomplete="username" placeholder="email akun Supabase">
+      <label for="cloudPassword">Password</label>
+      <input id="cloudPassword" type="password" required autocomplete="current-password" placeholder="Password akun Supabase">
+      <button id="cloudLoginBtn" type="submit">Login dan buka VIO Finance</button>
+    </form>
+    <div id="cloudAuthMsg" role="status">Masukkan URL dan publishable/anon key Supabase, lalu simpan. Buat akun pemilik di Supabase Auth terlebih dahulu.</div>
+  </div>
+</div>
+<div id="cloudStatus" style="display:none"><span id="cloudStatusText">Menyiapkan koneksi...</span><span><button id="cloudSyncNow" type="button">Sinkronkan</button> <button id="cloudLogoutBtn" type="button">Logout</button></span></div>
+<header><h1>VIO Finance</h1><p>Aplikasi Pelaporan Keuangan Usaha Kecil & Menengah</p></header>
+<nav id="nav">
+<button data-page="dashboard">Dashboard</button><button data-page="transaksi">Transaksi</button><button data-page="trxPending">Trx Pending</button>
+<button data-page="laporan">Laporan</button><button data-page="beol">BEOL</button><button data-page="kas">Multi Kas</button><button data-page="karyawan">Karyawan</button><button data-page="absensi">Absensi</button><button data-page="gaji">Penggajian</button><button data-page="tabungan">Tabungan Karyawan</button><button data-page="lembur">Lembur</button><button data-page="kategori">Kategori</button>
+<button data-page="data">Data & Backup</button>
+</nav>
+<main>
+<section id="dashboard" class="page">
+<div class="cards">
+<div class="card"><div class="label">Total Saldo</div><div class="value" id="saldo">Rp0</div></div>
+<div class="card"><div class="label">Pemasukan</div><div class="value masuk" id="masuk">Rp0</div></div>
+<div class="card"><div class="label">Pengeluaran</div><div class="value keluar" id="keluar">Rp0</div></div>
+<div class="card"><div class="label">Laba / Selisih</div><div class="value" id="laba">Rp0</div></div>
+</div>
+<div class="panel"><h3>Saldo Masing-masing Kas</h3><div id="saldoKas" class="chips"></div></div>
+<div class="panel"><div class="chart-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h3>Pendapatan Harian per Kas</h3><p class="chart-sub">Rincian pemasukan setiap hari untuk bulan yang dipilih</p></div><label style="min-width:190px;margin:0">Pilih Bulan<input id="incomeMonth" type="month"></label></div><div id="incomeMonthSummary" style="margin:10px 0;font-weight:bold"></div><div style="overflow:auto"><table id="dailyIncomeTable"><thead id="dailyIncomeHead"></thead><tbody id="dailyIncomeBody"></tbody></table></div></div>
+<div class="panel dashboard-chart-panel"><div class="chart-head"><div><h3>Pendapatan Harian</h3><p class="chart-sub">Pemasukan per hari dalam 30 hari terakhir</p></div></div><div class="chart-wrap"><canvas id="chartHarian"></canvas></div></div>
+<div class="panel dashboard-chart-panel"><div class="chart-head"><div><h3>Pendapatan Bulanan</h3><p class="chart-sub">Pemasukan per bulan dalam 12 bulan terakhir</p></div></div><div class="chart-wrap"><canvas id="chartBulanan"></canvas></div></div>
+<div class="panel dashboard-chart-panel"><div class="chart-head"><div><h3>Pendapatan Tahunan</h3><p class="chart-sub">Pemasukan per tahun</p></div></div><div class="chart-wrap"><canvas id="chartTahunan"></canvas></div></div>
+<div class="grid">
+<div class="panel"><h3>Ringkasan Bulan Ini</h3><div id="bulanRingkas"></div></div>
+<div class="panel"><h3>Transaksi Terbaru</h3><div id="terbaru"></div></div>
+</div>
+</section>
+
+<section id="transaksi" class="page">
+<div class="panel"><h2>Input Transaksi</h2>
+<form id="txForm"><div class="formgrid">
+<label>Tanggal<input id="tanggal" type="date" required></label>
+<label>Jenis<select id="jenis"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></label>
+<label>Kategori<select id="kategoriTx"></select></label>
+<label>Kas / Pos<select id="kasTx"></select></label>
+<label>Metode Pembayaran<select id="metodeTx"><option value="cash">Cash / Tunai</option></select></label>
+<label>Nominal (Rp)<input id="nominal" type="number" min="0" required></label>
+<label style="grid-column:1/-1">Keterangan<input id="ket" placeholder="Contoh: Cetak banner 3x1 meter"></label>
+</div><button class="primary">Simpan Transaksi</button></form></div>
+<div class="panel"><h2>Daftar Transaksi</h2><div class="toolbar">
+<input id="cari" placeholder="Cari keterangan/kategori..."><input id="filterTanggal" type="month">
+<select id="filterJenis"><option value="">Semua jenis</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select>
+</div><div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Kas</th><th>Metode</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th><th>Aksi</th></tr></thead><tbody id="txTable"></tbody></table></div></div>
+</section>
+
+<section id="trxPending" class="page">
+<div class="panel"><h2>Trx Pending</h2>
+<p>Catat transaksi yang belum masuk ke pencatatan kas. Status <b>Pending</b> tidak mempengaruhi saldo. Saat dipilih <b>Terbayar</b>, transaksi otomatis dicatat sebagai <b>pemasukan</b> ke kas yang dipilih.</p>
+<form id="trxPendingForm"><div class="formgrid">
+<label>Nama Transaksi<input id="trxPendingName" placeholder="Contoh: Pembayaran pelanggan" required></label>
+<label>Nominal (Rp)<input id="trxPendingAmount" type="number" min="0" required></label>
+<label>Kas<select id="trxPendingKas" required></select></label>
+</div>
+<button class="primary">Tambah Pending</button>
+</form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Total Pending</div><div class="value keluar" id="trxPendingTotal">Rp0</div></div>
+<div class="card"><div class="label">Total Terbayar</div><div class="value masuk" id="trxPendingPaid">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Nama Transaksi</th><th>Nominal</th><th>Kas</th><th>Status</th><th>Aksi</th></tr></thead>
+<tbody id="trxPendingTable"></tbody></table></div>
+</div></section>
+
+<section id="laporan" class="page">
+<div class="panel"><h2>Laporan</h2><div class="toolbar"><select id="lapJenis"><option value="bulan">Bulanan</option><option value="tahun">Tahunan</option><option value="hari">Harian</option></select><input id="lapTanggal" type="date"></div><div id="laporanBox"></div></div>
+</section>
+
+<section id="kas" class="page">
+<div class="panel"><h2>Kelola Kas</h2>
+<p>Setiap kas memiliki saldo sendiri. Anda dapat menambah kas baru sesuai jenis usaha.</p>
+<form id="kasForm" class="toolbar"><input id="kasName" placeholder="Nama kas baru" required><button class="primary">Tambah Kas</button></form>
+<div style="overflow:auto"><table><thead><tr><th>Nama Kas</th><th>Saldo</th><th>Aksi</th></tr></thead><tbody id="kasTable"></tbody></table></div>
+</div></section>
+
+
+<section id="karyawan" class="page">
+<div class="panel"><h2>Data Karyawan</h2>
+<form id="empForm"><div class="formgrid">
+<label>Nama Karyawan<input id="empName" required></label>
+<label>Jabatan<input id="empRole" placeholder="Contoh: Operator Printing"></label>
+<label>Upah Harian<input id="empDaily" type="number" min="0" required></label>
+</div><button class="primary">Tambah Karyawan</button></form>
+<div style="overflow:auto"><table><thead><tr><th>Nama</th><th>Jabatan</th><th>Upah Harian</th><th>Aksi</th></tr></thead><tbody id="empTable"></tbody></table></div>
+</div></section>
+
+<section id="absensi" class="page">
+<div class="panel"><h2>Absensi Karyawan</h2>
+<form id="attForm"><div class="formgrid">
+<label>Tanggal<input id="attDate" type="date" required></label>
+<label>Karyawan<select id="attEmp"></select></label>
+<label>Status<select id="attStatus">
+<option value="half">1/2 Hari</option>
+<option value="threequarter">3/4 Hari</option>
+<option value="full">Full</option>
+<option value="lembur1">Lembur 1</option>
+<option value="lembur2">Lembur 2</option>
+<option value="izin">Izin</option>
+<option value="sakit">Sakit</option>
+<option value="alpa">Alpa</option>
+<option value="libur">Libur</option>
+</select></label>
+<label>Keterangan<input id="attNote"></label>
+</div><button class="primary">Simpan Absensi</button></form>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Karyawan</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="attTable"></tbody></table></div>
+</div></section>
+
+<section id="gaji" class="page">
+<div class="panel"><h2>Penggajian</h2>
+<p>Perhitungan otomatis menggunakan upah harian dan jenis kehadiran. 1/2 hari = 0,5×, 3/4 hari = 0,75×, Full = 1×. Tarif Lembur 1 dan Lembur 2 dapat diubah pada menu Pengaturan Lembur.</p>
+<form id="payForm"><div class="formgrid">
+<label>Periode Gaji<select id="payPeriod"><option value="week">1 Minggu</option><option value="2week">2 Minggu</option><option value="month">1 Bulan</option></select></label>
+<label>Karyawan<select id="payEmp"></select></label>
+<label>Tanggal Mulai Periode<input id="payStart" type="date" required></label>
+<label>Tanggal Akhir Periode<input id="payEnd" type="date" readonly></label>
+<label>Kas Pembayaran<select id="payKas"></select></label>
+<label>Metode<select id="payMethod"><option value="cash">Cash / Tunai</option></select></label>
+<label>Penyesuaian / Bonus / Potongan (Rp)<input id="payAdjust" type="number" value="0"></label>
+<label>Total Gaji<input id="payTotal" type="number" min="0" required></label>
+</div>
+<div id="payInfo" style="padding:10px;background:#f8fafc;border-radius:8px;margin:8px 0"></div>
+<button class="primary">Bayarkan & Catat ke Kas</button></form>
+<div style="overflow:auto"><table><thead><tr><th>Periode</th><th>Karyawan</th><th>Total</th><th>Kas</th><th>Tanggal Bayar</th><th>Status</th></tr></thead><tbody id="payTable"></tbody></table></div>
+</div></section>
+
+
+
+
+<section id="tfqris" class="page">
+<div class="panel"><h2>TF & QRIS Pending</h2>
+<p>Catat transaksi Transfer Bank dan QRIS yang belum masuk ke kas. Status <b>Pending</b> tidak mempengaruhi saldo. Saat <b>Terbayar</b>, transaksi otomatis masuk sebagai pemasukan ke kas yang dipilih.</p>
+<form id="pendingForm"><div class="formgrid">
+<label>Tanggal Transaksi<input id="pendingDate" type="date" required></label>
+<label>Metode<select id="pendingMethod"><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+<label>Nama / Sumber<input id="pendingSource" placeholder="Nama pelanggan / sumber pembayaran" required></label>
+<label>Nominal<input id="pendingAmount" type="number" min="0" required></label>
+<label>Kategori<select id="pendingCat"></select></label>
+<label>Kas Tujuan<select id="pendingKas"></select></label>
+<label>Catatan<input id="pendingNote"></label>
+</div><button class="primary">Tambah Pending</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Total Pending</div><div class="value keluar" id="pendingTotal">Rp0</div></div>
+<div class="card"><div class="label">Sudah Terbayar</div><div class="value masuk" id="pendingPaid">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Metode</th><th>Sumber</th><th>Kategori</th><th>Nominal</th><th>Kas Tujuan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="pendingTable"></tbody></table></div>
+</div></section>
+
+
+<section id="tfqris" class="page">
+<div class="panel"><h2>TF & QRIS</h2>
+<p>Catat transaksi Transfer Bank atau QRIS yang masih <b>Pending</b>. Pending <b>tidak masuk kas</b>. Saat dipilih <b>Terbayar</b>, transaksi otomatis masuk ke kas yang dipilih.</p>
+<form id="tfForm"><div class="formgrid">
+<label>Tanggal<input id="tfDate" type="date" required></label>
+<label>Jenis<select id="tfType"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></label>
+<label>Metode<select id="tfMethod"><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+<label>Kategori<select id="tfCategory"></select></label>
+<label>Nominal<input id="tfAmount" type="number" min="0" required></label>
+<label>Keterangan<input id="tfNote" placeholder="Contoh: Pembayaran pelanggan"></label>
+</div><button class="primary">Tambah Pending</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Pending Masuk</div><div class="value masuk" id="tfPendingIn">Rp0</div></div>
+<div class="card"><div class="label">Pending Keluar</div><div class="value keluar" id="tfPendingOut">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Metode</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th><th>Status / Aksi</th></tr></thead><tbody id="tfTable"></tbody></table></div>
+</div></section>
+
+<section id="tabungan" class="page">
+<div class="panel"><h2>Tabungan Karyawan</h2>
+<p>Pencatatan tabungan karyawan secara internal. <b>Tidak terhubung dengan Multi Kas</b> dan tidak mengubah saldo kas maupun transaksi keuangan.</p>
+<form id="saveForm"><div class="formgrid">
+<label>Tanggal<input id="svDate" type="date" required></label>
+<label>Karyawan<select id="svEmp"></select></label>
+<label>Jenis<select id="svType"><option value="setor">Setor Tabungan</option><option value="tarik">Tarik Tabungan</option></select></label>
+<label>Nominal<input id="svAmount" type="number" min="0" required></label>
+<label style="grid-column:1/-1">Keterangan<input id="svNote"></label>
+</div><button class="primary">Simpan Pencatatan</button></form>
+
+<div style="overflow:auto"><table><thead><tr><th>Karyawan</th><th>Saldo Tabungan</th></tr></thead><tbody id="savingBalance"></tbody></table></div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Karyawan</th><th>Jenis</th><th>Nominal</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="savingTable"></tbody></table></div>
+</div></section>
+
+<section id="lembur" class="page">
+<div class="panel"><h2>Pengaturan Lembur</h2>
+<p>Atur pengali upah harian untuk Lembur 1 dan Lembur 2. Perubahan akan langsung digunakan pada perhitungan gaji.</p>
+<form id="otForm"><div class="formgrid">
+<label>Lembur 1 (× Upah Harian)<input id="ot1" type="number" min="0" step="0.01" required></label>
+<label>Lembur 2 (× Upah Harian)<input id="ot2" type="number" min="0" step="0.01" required></label>
+</div><button class="primary">Simpan Pengaturan Lembur</button></form>
+<div class="panel" style="margin-top:12px;background:#f8fafc">
+<b>Contoh:</b> Jika upah harian Rp50.000, maka Lembur 1 = <span id="otExample1"></span> dan Lembur 2 = <span id="otExample2"></span>.
+</div>
+</div></section>
+
+
+
+<section id="tfqris" class="page">
+<div class="panel"><h2>TF & QRIS Pending</h2>
+<p>Catat transaksi Transfer Bank dan QRIS yang belum masuk ke kas. Status <b>Pending</b> tidak mempengaruhi saldo. Saat <b>Terbayar</b>, transaksi otomatis masuk sebagai pemasukan ke kas yang dipilih.</p>
+<form id="pendingForm"><div class="formgrid">
+<label>Tanggal Transaksi<input id="pendingDate" type="date" required></label>
+<label>Metode<select id="pendingMethod"><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+<label>Nama / Sumber<input id="pendingSource" placeholder="Nama pelanggan / sumber pembayaran" required></label>
+<label>Nominal<input id="pendingAmount" type="number" min="0" required></label>
+<label>Kategori<select id="pendingCat"></select></label>
+<label>Kas Tujuan<select id="pendingKas"></select></label>
+<label>Catatan<input id="pendingNote"></label>
+</div><button class="primary">Tambah Pending</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Total Pending</div><div class="value keluar" id="pendingTotal">Rp0</div></div>
+<div class="card"><div class="label">Sudah Terbayar</div><div class="value masuk" id="pendingPaid">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Metode</th><th>Sumber</th><th>Kategori</th><th>Nominal</th><th>Kas Tujuan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="pendingTable"></tbody></table></div>
+</div></section>
+
+
+<section id="tfqris" class="page">
+<div class="panel"><h2>TF & QRIS</h2>
+<p>Catat transaksi Transfer Bank atau QRIS yang masih <b>Pending</b>. Pending <b>tidak masuk kas</b>. Saat dipilih <b>Terbayar</b>, transaksi otomatis masuk ke kas yang dipilih.</p>
+<form id="tfForm"><div class="formgrid">
+<label>Tanggal<input id="tfDate" type="date" required></label>
+<label>Jenis<select id="tfType"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></label>
+<label>Metode<select id="tfMethod"><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+<label>Kategori<select id="tfCategory"></select></label>
+<label>Nominal<input id="tfAmount" type="number" min="0" required></label>
+<label>Keterangan<input id="tfNote" placeholder="Contoh: Pembayaran pelanggan"></label>
+</div><button class="primary">Tambah Pending</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Pending Masuk</div><div class="value masuk" id="tfPendingIn">Rp0</div></div>
+<div class="card"><div class="label">Pending Keluar</div><div class="value keluar" id="tfPendingOut">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Metode</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th><th>Status / Aksi</th></tr></thead><tbody id="tfTable"></tbody></table></div>
+</div></section>
+
+<section id="tabungan" class="page">
+<div class="panel"><h2>Tabungan Karyawan</h2>
+<p>Catat setoran dan penarikan tabungan masing-masing karyawan. Saldo tabungan dihitung otomatis.</p>
+<form id="saveForm"><div class="formgrid">
+<label>Tanggal<input id="saveDate" type="date" required></label>
+<label>Karyawan<select id="saveEmp"></select></label>
+<label>Jenis<select id="saveType"><option value="setor">Setoran</option><option value="tarik">Penarikan</option></select></label>
+<label>Nominal (Rp)<input id="saveAmount" type="number" min="0" required></label>
+<label>Keterangan<input id="saveNote" placeholder="Contoh: Potongan tabungan mingguan"></label>
+</div><button class="primary">Simpan Tabungan</button></form>
+
+<div class="panel" style="margin-top:12px"><h3>Saldo Tabungan per Karyawan</h3><div id="savingBalances" class="chips"></div></div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Karyawan</th><th>Jenis</th><th>Nominal</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="saveTable"></tbody></table></div>
+</div></section>
+
+
+<section id="bayaronline" class="page">
+<div class="panel"><h2>Bayar Online</h2>
+<p>Catat transaksi online yang masih pending. Status <b>Pending</b> tidak mempengaruhi kas. Saat dipilih <b>Terbayar</b>, transaksi otomatis masuk sebagai pengeluaran ke kas yang dipilih.</p>
+<form id="onlineForm"><div class="formgrid">
+<label>Tanggal Pesanan<input id="onlineDate" type="date" required></label>
+<label>Nama Toko / Marketplace<input id="onlineStore" required></label>
+<label>Nama Barang / Keperluan<input id="onlineItem" required></label>
+<label>Nominal Harus Dibayar<input id="onlineAmount" type="number" min="0" required></label>
+<label>Jatuh Tempo<input id="onlineDue" type="date"></label>
+<label>Catatan<input id="onlineNote"></label>
+</div><button class="primary">Tambah Kewajiban</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Pending</div><div class="value keluar" id="onlineUnpaid">Rp0</div></div>
+<div class="card"><div class="label">Terbayar</div><div class="value" id="onlinePaid">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Toko</th><th>Keperluan</th><th>Nominal</th><th>Jatuh Tempo</th><th>Status</th><th>Kas</th><th>Aksi</th></tr></thead><tbody id="onlineTable"></tbody></table></div>
+</div></section>
+
+
+<section id="tfqris" class="page">
+<div class="panel"><h2>TF & QRIS Pending</h2>
+<p>Catat transaksi Transfer Bank dan QRIS yang belum masuk ke kas. Status <b>Pending</b> tidak mempengaruhi saldo. Saat <b>Terbayar</b>, transaksi otomatis masuk sebagai pemasukan ke kas yang dipilih.</p>
+<form id="pendingForm"><div class="formgrid">
+<label>Tanggal Transaksi<input id="pendingDate" type="date" required></label>
+<label>Metode<select id="pendingMethod"><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+<label>Nama / Sumber<input id="pendingSource" placeholder="Nama pelanggan / sumber pembayaran" required></label>
+<label>Nominal<input id="pendingAmount" type="number" min="0" required></label>
+<label>Kategori<select id="pendingCat"></select></label>
+<label>Kas Tujuan<select id="pendingKas"></select></label>
+<label>Catatan<input id="pendingNote"></label>
+</div><button class="primary">Tambah Pending</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Total Pending</div><div class="value keluar" id="pendingTotal">Rp0</div></div>
+<div class="card"><div class="label">Sudah Terbayar</div><div class="value masuk" id="pendingPaid">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Metode</th><th>Sumber</th><th>Kategori</th><th>Nominal</th><th>Kas Tujuan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="pendingTable"></tbody></table></div>
+</div></section>
+
+
+<section id="tfqris" class="page">
+<div class="panel"><h2>TF & QRIS</h2>
+<p>Catat transaksi Transfer Bank atau QRIS yang masih <b>Pending</b>. Pending <b>tidak masuk kas</b>. Saat dipilih <b>Terbayar</b>, transaksi otomatis masuk ke kas yang dipilih.</p>
+<form id="tfForm"><div class="formgrid">
+<label>Tanggal<input id="tfDate" type="date" required></label>
+<label>Jenis<select id="tfType"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></label>
+<label>Metode<select id="tfMethod"><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+<label>Kategori<select id="tfCategory"></select></label>
+<label>Nominal<input id="tfAmount" type="number" min="0" required></label>
+<label>Keterangan<input id="tfNote" placeholder="Contoh: Pembayaran pelanggan"></label>
+</div><button class="primary">Tambah Pending</button></form>
+<div class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Pending Masuk</div><div class="value masuk" id="tfPendingIn">Rp0</div></div>
+<div class="card"><div class="label">Pending Keluar</div><div class="value keluar" id="tfPendingOut">Rp0</div></div>
+</div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Metode</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th><th>Status / Aksi</th></tr></thead><tbody id="tfTable"></tbody></table></div>
+</div></section>
+
+<section id="tabungan" class="page">
+<div class="panel"><h2>Tabungan Karyawan</h2>
+<p>Modul ini adalah pencatatan internal tabungan karyawan. <b>Tidak mempengaruhi kas usaha</b>.</p>
+<form id="savingForm"><div class="formgrid">
+<label>Tanggal<input id="savingDate" type="date" required></label>
+<label>Karyawan<select id="savingEmp"></select></label>
+<label>Jenis<select id="savingType"><option value="setor">Setoran Tabungan</option><option value="tarik">Penarikan Tabungan</option></select></label>
+<label>Nominal<input id="savingAmount" type="number" min="0" required></label>
+<label style="grid-column:1/-1">Keterangan<input id="savingNote"></label>
+</div><button class="primary">Simpan Tabungan</button></form>
+<div class="panel" style="margin-top:12px;background:#f8fafc"><h3>Saldo Tabungan per Karyawan</h3><div id="savingBalances" class="chips"></div></div>
+<div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Karyawan</th><th>Jenis</th><th>Nominal</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="savingTable"></tbody></table></div>
+</div></section>
+
+<section id="kategori" class="page">
+<div class="panel"><h2>Kelola Kategori</h2><form id="catForm" class="toolbar"><input id="catName" placeholder="Nama kategori baru" required><select id="catType"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select><select id="catKas" required><option value="">Pilih Nama Kas</option></select><button class="primary">Tambah</button></form><div style="overflow:auto"><table><thead><tr><th>Kategori</th><th>Jenis</th><th>Nama Kas</th><th>Aksi</th></tr></thead><tbody id="catTable"></tbody></table></div></div>
+</section>
+
+<section id="beol" class="page">
+ <div class="panel"><h2>BEOL — Belanja Online / Belanja Belum Lunas</h2>
+ <p>Catatan belanja dari Shopee, TikTok Shop, Tokopedia, atau toko lainnya yang belum lunas. <b>Data BEOL hanya sebagai catatan dan tidak mempengaruhi saldo, pemasukan, pengeluaran, atau kas mana pun.</b></p>
+ <form id="beolForm"><div class="formgrid">
+  <label>Tanggal Belanja<input id="beolDate" type="date" required></label>
+  <label>Marketplace / Nama Toko<input id="beolStore" placeholder="Shopee, TikTok Shop, Tokopedia, toko biasa..." required></label>
+  <label>Nama Barang / Keperluan<input id="beolItem" placeholder="Contoh: tinta printer, kertas, bahan banner" required></label>
+  <label>Nominal (Rp)<input id="beolAmount" type="number" min="0" required></label>
+  <label>Jatuh Tempo (opsional)<input id="beolDue" type="date"></label>
+  <label>Status<select id="beolStatus"><option value="PENDING">PENDING</option><option value="LUNAS">LUNAS</option></select></label>
+  <label style="grid-column:1/-1">Keterangan<input id="beolNote" placeholder="Catatan tambahan (opsional)"></label>
+ </div><button class="primary" type="submit">Simpan Catatan BEOL</button></form>
+ <div class="cards" style="margin-top:15px">
+  <div class="card"><div class="label">Total Belum Lunas (PENDING)</div><div class="value keluar" id="beolPendingTotal">Rp0</div></div>
+  <div class="card"><div class="label">Total LUNAS</div><div class="value masuk" id="beolLunasTotal">Rp0</div></div>
+ </div>
+ <div class="toolbar" style="margin-top:12px"><input id="beolSearch" placeholder="Cari toko atau barang..."><select id="beolFilter"><option value="">Semua Status</option><option value="PENDING">PENDING</option><option value="LUNAS">LUNAS</option></select></div>
+ <div style="overflow:auto"><table><thead><tr><th>Tanggal</th><th>Marketplace / Toko</th><th>Barang / Keperluan</th><th>Nominal</th><th>Jatuh Tempo</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="beolTable"></tbody></table></div>
+ </div>
+</section>
+
+<section id="data" class="page">
+<div class="panel"><h2>Data & Backup</h2><p>Ekspor JSON untuk cadangan. Setelah login cloud, impor backup lama akan menyimpan data ke database online; periksa data terlebih dahulu.</p>
+<button class="primary" onclick="exportData()">Export Backup JSON</button> <button class="small" type="button" onclick="cloudManualSync()">Simpan/Sinkronkan ke Cloud</button>
+<label style="margin-top:15px">Import Backup JSON<input id="importFile" type="file" accept=".json"></label>
+<button class="small" onclick="exportCSV()">Export Transaksi CSV</button>
+<button class="danger" onclick="hapusSemua()">Hapus Semua Data</button>
+</div></section>
+
+<div id="editModal" class="modal">
+ <div class="modalbox">
+  <h2>Edit Transaksi</h2>
+  <form id="editForm">
+   <input type="hidden" id="editId">
+   <div class="formgrid">
+    <label>Tanggal<input id="editTanggal" type="date" required></label>
+    <label>Jenis<select id="editJenis"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></label>
+    <label>Kategori<select id="editKategori"></select></label>
+    <label>Kas / Pos<select id="editKas"></select></label>
+    <label>Metode Pembayaran<select id="editMetode"><option value="cash">Cash / Tunai</option><option value="transfer">Transfer Bank</option><option value="qris">QRIS</option></select></label>
+    <label>Nominal (Rp)<input id="editNominal" type="number" min="0" required></label>
+    <label style="grid-column:1/-1">Keterangan<input id="editKet"></label>
+   </div>
+   <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="primary" type="submit">Simpan Perubahan</button>
+    <button class="small" type="button" onclick="closeEdit()">Batal</button>
+   </div>
+  </form>
+ </div>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const KEY='vio_finance_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{
+ transactions:[],
+ kas:[
+ {id:1,name:'Kas Banner'},{id:2,name:'Kas ATK'},{id:3,name:'Kas Print'},{id:4,name:'Kas Cetak A3'},
+ {id:5,name:'Kas Pigora'},{id:6,name:'Kas Kaos'},{id:7,name:'Kas Pulsa'}
+ ],
+ categories:[
+ {id:1,name:'Penjualan Banner',type:'masuk'},{id:2,name:'Sticker',type:'masuk'},
+ {id:3,name:'Fotocopy',type:'masuk'},{id:4,name:'Cetak Foto',type:'masuk'},
+ {id:5,name:'Laminating',type:'masuk'},{id:6,name:'Undangan',type:'masuk'},
+ {id:7,name:'Buku Yasin',type:'masuk'},{id:8,name:'Sablon DTF',type:'masuk'},
+ {id:9,name:'ATK',type:'masuk'},{id:10,name:'Pulsa / Token',type:'masuk'},
+ {id:11,name:'Servis',type:'masuk'},{id:12,name:'Bahan / Operasional',type:'keluar'},
+ {id:13,name:'Listrik',type:'keluar'},{id:14,name:'Internet',type:'keluar'},
+ {id:15,name:'Transportasi',type:'keluar'},{id:16,name:'Gaji',type:'keluar'},
+ {id:17,name:'Lain-lain',type:'keluar'}]};
+
+if(!db.overtimeRates) db.overtimeRates={lembur1:1.15,lembur2:1.30};
+// Migrasi kategori lama: kategori tanpa kas tetap berlaku untuk semua kas.
+if(db.categories) db.categories.forEach(c=>{if(c.kasId===undefined)c.kasId=null});
+if(db.transactions) db.transactions.forEach(t=>{t.payment='cash'});
+if(db.payroll) db.payroll.forEach(x=>{x.method='cash'});
+if(!db.savings) db.savings=[];
+
+if(!db.savings) db.savings=[];
+
+if(!db.tfQris) db.tfQris=[];
+if(!db.onlinePurchases) db.onlinePurchases=[];
+if(!db.beolRecords) db.beolRecords=[];
+if(!db.pendingPayments) db.pendingPayments=[];
+if(!db.trxPending) db.trxPending=[];
+if(!db.employeeSavings) db.employeeSavings=[];
+if(!db.employees) db.employees=[];
+if(!db.attendance) db.attendance=[];
+if(!db.overtimeRates) db.overtimeRates={lembur1:1.15,lembur2:1.30};
+if(db.transactions) db.transactions.forEach(t=>{t.payment='cash'});
+if(db.payroll) db.payroll.forEach(x=>{x.method='cash'});
+if(db.employees) db.employees.forEach(e=>{delete e.salary});
+if(db.attendance) db.attendance.forEach(a=>{if(a.status==='hadir')a.status='full'});
+if(!db.payroll) db.payroll=[];
+// Migrasi riwayat penggajian lama ke format periode.
+db.payroll.forEach(p=>{
+ if(!p.startDate && p.month){
+  p.startDate=p.month+'-01';
+  let d=new Date(p.startDate+'T00:00:00'); d.setMonth(d.getMonth()+1); d.setDate(d.getDate()-1); p.endDate=d.toISOString().slice(0,10);
+ }
+ if(!p.periodType)p.periodType='month';
+ if(!p.paidDate)p.paidDate=p.endDate||p.month||new Date().toISOString().slice(0,10);
+});
+if(!db.kas) db.kas=[
+ {id:1,name:'Kas Banner'},{id:2,name:'Kas ATK'},{id:3,name:'Kas Print'},{id:4,name:'Kas Cetak A3'},
+ {id:5,name:'Kas Pigora'},{id:6,name:'Kas Kaos'},{id:7,name:'Kas Pulsa'}
+];
+if(db.transactions) db.transactions.forEach(x=>{if(!x.kasId)x.kasId=db.kas[0]?.id||1;if(!x.payment)x.payment='cash'});
+
+let supabaseClient=null, cloudUser=null, cloudReady=false, cloudRevision=null, cloudSaveTimer=null, cloudSaveBusy=false, cloudSaveAgain=false;
+const cloudConfigKey='vio_finance_supabase_config_v1';
+function cloudMsg(message){const el=document.getElementById('cloudAuthMsg');if(el)el.textContent=message}
+function cloudStatus(message){const el=document.getElementById('cloudStatusText');if(el)el.textContent=message}
+function lockCloud(message){
+ cloudReady=false;document.body.classList.add('cloud-locked');
+ document.getElementById('cloudAuth').style.display='flex';
+ document.getElementById('cloudStatus').style.display='none';
+ if(message)cloudMsg(message);
+}
+function unlockCloud(){
+ document.body.classList.remove('cloud-locked');
+ document.getElementById('cloudAuth').style.display='none';
+ document.getElementById('cloudStatus').style.display='flex';
+}
+function readCloudConfig(){
+ try{return JSON.parse(localStorage.getItem(cloudConfigKey)||'{}')}catch(_){return {}}
+}
+function initSupabase(){
+ const cfg=readCloudConfig();
+ if(!cfg.url||!cfg.key){supabaseClient=null;return false}
+ if(!window.supabase||!window.supabase.createClient){cloudMsg('SDK Supabase belum termuat. Periksa koneksi internet, lalu muat ulang halaman.');return false}
+ try{supabaseClient=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});return true}
+ catch(e){cloudMsg('Konfigurasi Supabase tidak valid: '+e.message);return false}
+}
+async function loadCloudState(){
+ if(!supabaseClient||!cloudUser)throw new Error('Belum login.');
+ const {data,error}=await supabaseClient.from('vio_app_state').select('id,owner_id,state,revision,updated_at').eq('id','main').maybeSingle();
+ if(error)throw error;
+ if(data){
+   if(data.owner_id!==cloudUser.id)throw new Error('Data cloud bukan milik akun ini. Akses ditolak.');
+   if(!data.state||typeof data.state!=='object')throw new Error('Format data cloud tidak valid.');
+   db=data.state;cloudRevision=Number(data.revision||1);
+   localStorage.setItem(KEY,JSON.stringify(db));
+   cloudReady=true;render();cloudStatus('Tersambung • data cloud dimuat • revisi '+cloudRevision);
+   return true;
+ }
+ cloudRevision=null;cloudReady=true;
+ cloudStatus('Login berhasil • database masih kosong. Buka Data & Backup lalu impor backup JSON.');
+ render();
+ return false;
+}
+async function doCloudLogin(email,password){
+ if(!initSupabase())throw new Error('Isi URL dan publishable/anon key Supabase terlebih dahulu.');
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+ if(error)throw error;
+ cloudUser=data.user;
+ await loadCloudState();
+ unlockCloud();
+ if(cloudRevision===null)cloudMsg('Belum ada data di database. Setelah masuk, buka Data & Backup dan impor backup-vio-finance.json. Periksa ringkasan data sebelum mengimpor.');
+}
+async function cloudSync(){
+ if(!cloudReady||!supabaseClient||!cloudUser)return;
+ if(cloudSaveBusy){cloudSaveAgain=true;return}
+ cloudSaveBusy=true;
+ try{
+   const snapshot=JSON.parse(JSON.stringify(db));
+   if(cloudRevision===null){
+     const {data,error}=await supabaseClient.from('vio_app_state').insert({id:'main',owner_id:cloudUser.id,state:snapshot,revision:1}).select('revision').single();
+     if(error){
+       if(error.code==='23505'){await loadCloudState();throw new Error('Data cloud baru saja dibuat dari perangkat lain. Data dimuat ulang untuk mencegah tertimpa. Periksa perubahan sebelum melanjutkan.')}
+       throw error;
+     }
+     cloudRevision=Number(data.revision||1);
+   }else{
+     const nextRevision=cloudRevision+1;
+     const {data,error}=await supabaseClient.from('vio_app_state').update({state:snapshot,revision:nextRevision,updated_at:new Date().toISOString()}).eq('id','main').eq('owner_id',cloudUser.id).eq('revision',cloudRevision).select('revision').maybeSingle();
+     if(error)throw error;
+     if(!data){await loadCloudState();throw new Error('Konflik perubahan dari perangkat lain. Data cloud dimuat ulang agar tidak tertimpa. Ulangi perubahan yang belum tersimpan.')}
+     cloudRevision=Number(data.revision);
+   }
+   cloudStatus('Tersimpan online • '+new Date().toLocaleTimeString('id-ID')+' • revisi '+cloudRevision);
+ }catch(e){
+   console.error('VIO Finance cloud sync error:',e);
+   cloudStatus('GAGAL menyimpan online. Data lokal masih ada. Periksa koneksi dan tekan Sinkronkan.');
+   alert('VIO Finance belum berhasil menyimpan ke database online. Data lokal tetap tersimpan. Detail: '+(e.message||e));
+ }finally{
+   cloudSaveBusy=false;
+   if(cloudSaveAgain){cloudSaveAgain=false;scheduleCloudSave()}
+ }
+}
+function scheduleCloudSave(){
+ if(!cloudReady)return;
+ clearTimeout(cloudSaveTimer);
+ cloudStatus('Perubahan belum tersimpan online…');
+ cloudSaveTimer=setTimeout(()=>cloudSync(),700);
+}
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(db));
+ scheduleCloudSave();
+}
+async function cloudManualSync(){
+ if(!cloudReady){alert('Silakan login terlebih dahulu.');return}
+ await cloudSync();
+}
+async function cloudLogout(){
+ if(supabaseClient)await supabaseClient.auth.signOut();
+ cloudUser=null;cloudReady=false;cloudRevision=null;lockCloud('Anda sudah logout. Login kembali untuk membuka data keuangan.');
+}
+async function bootCloud(){
+ const cfg=readCloudConfig();
+ document.getElementById('cloudUrl').value=cfg.url||'';
+ document.getElementById('cloudAnonKey').value=cfg.key||'';
+ if(cfg.url&&cfg.key&&initSupabase()){
+   const {data,error}=await supabaseClient.auth.getSession();
+   if(!error&&data.session){
+     cloudUser=data.session.user;
+     try{await loadCloudState();unlockCloud()}catch(e){lockCloud('Gagal memuat data cloud: '+e.message)}
+   }else lockCloud('Silakan login menggunakan akun pemilik Supabase.');
+ }else lockCloud('Atur koneksi Supabase terlebih dahulu. Buat akun pemilik di Supabase Auth.');
+}
+document.getElementById('cloudSaveConfig').addEventListener('click',()=>{
+ const url=document.getElementById('cloudUrl').value.trim().replace(/\/+$/,'');
+ const key=document.getElementById('cloudAnonKey').value.trim();
+ if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)||!key){cloudMsg('URL Supabase atau publishable/anon key belum benar.');return}
+ localStorage.setItem(cloudConfigKey,JSON.stringify({url,key}));
+ cloudMsg('Pengaturan disimpan pada perangkat ini. Halaman akan memuat ulang untuk menerapkan konfigurasi.');
+ location.reload();
+});
+document.getElementById('cloudLoginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=document.getElementById('cloudLoginBtn');btn.disabled=true;btn.textContent='Memeriksa login…';
+ try{await doCloudLogin(document.getElementById('cloudEmail').value.trim(),document.getElementById('cloudPassword').value);unlockCloud();render();cloudMsg('Login berhasil. Pastikan database sudah diinisialisasi dan backup lama diimpor bila database masih kosong.');}
+ catch(err){lockCloud('Login/koneksi gagal: '+(err.message||err));}
+ finally{btn.disabled=false;btn.textContent='Login dan buka VIO Finance'}
+});
+document.getElementById('cloudLogoutBtn').addEventListener('click',cloudLogout);
+document.getElementById('cloudSyncNow').addEventListener('click',cloudManualSync);
+
+const rp=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function render(){
+renderDashboardCharts();
+ renderDailyIncomeTable();
+ let masuk=db.transactions.filter(x=>x.type==='masuk').reduce((a,x)=>a+x.amount,0);
+ let keluar=db.transactions.filter(x=>x.type==='keluar').reduce((a,x)=>a+x.amount,0);
+ saldo.textContent=rp(masuk-keluar); document.getElementById('masuk').textContent=rp(masuk);document.getElementById('keluar').textContent=rp(keluar);document.getElementById('laba').textContent=rp(masuk-keluar);
+ kasTx.innerHTML=db.kas.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('');
+ kategoriTx.innerHTML=db.categories.filter(c=>c.type===jenis.value && (c.kasId==null || c.kasId==Number(kasTx.value))).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')||'<option value="">Tidak ada kategori untuk kas ini</option>';
+ kasTx.onchange=()=>{kategoriTx.innerHTML=db.categories.filter(c=>c.type===jenis.value && (c.kasId==null || c.kasId==Number(kasTx.value))).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')||'<option value="">Tidak ada kategori untuk kas ini</option>';};
+ renderTx();renderCats();renderKas();renderTrxPending();renderLap();renderRingkas();renderEmployees();renderAttendance();renderPayroll();populateHRSelects();renderOvertimeSettings();renderOnline();renderSavings();renderTfQris();renderPending();renderOnline();renderSavings();populateFinanceSelects();renderOnline();renderSavings();renderBEOL();
+}
+
+
+function populateSavingsSelects(){
+ svEmp.innerHTML=db.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')||'<option value="">Belum ada karyawan</option>';
+}
+function renderSavings(){
+ let balances={};
+ db.savings.forEach(x=>{balances[x.empId]=(balances[x.empId]||0)+(x.type==='setor'?x.amount:-x.amount)});
+ savingBalance.innerHTML=db.employees.map(e=>`<tr><td>${esc(e.name)}</td><td>${rp(balances[e.id]||0)}</td></tr>`).join('')||'<tr><td colspan="2">Belum ada karyawan.</td></tr>';
+ savingTable.innerHTML=db.savings.slice().sort((a,b)=>b.id-a.id).map(x=>`<tr><td>${x.date}</td><td>${esc(employeeName(x.empId))}</td><td>${x.type==='setor'?'Setor':'Tarik'}</td><td>${rp(x.amount)}</td><td>${esc(x.note||'')}</td><td><button class="danger" onclick="delSaving(${x.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="6">Belum ada pencatatan tabungan.</td></tr>';
+}
+saveForm.onsubmit=e=>{
+ e.preventDefault();if(!svEmp.value)return alert('Tambahkan karyawan terlebih dahulu.');
+ let amount=Number(svAmount.value||0);if(amount<=0)return alert('Nominal harus lebih dari 0.');
+ db.savings.push({id:Date.now(),date:svDate.value,empId:Number(svEmp.value),type:svType.value,amount,note:svNote.value});
+ save();saveForm.reset();svDate.value=new Date().toISOString().slice(0,10);render();alert('Pencatatan tabungan karyawan berhasil disimpan.');
+};
+function delSaving(id){if(confirm('Hapus transaksi tabungan?')){db.savings=db.savings.filter(x=>x.id!==id);save();render()}}
+function employeeName(id){return db.employees.find(e=>e.id==id)?.name||'-'}
+function renderEmployees(){
+ empTable.innerHTML=db.employees.map(e=>`<tr><td>${esc(e.name)}</td><td>${esc(e.role||'-')}</td><td>${rp(e.daily||0)}</td><td><button class="danger" onclick="delEmployee(${e.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="5">Belum ada karyawan.</td></tr>';
+}
+function populateHRSelects(){
+ let opts=db.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('');
+ attEmp.innerHTML=opts||'<option value="">Belum ada karyawan</option>';
+saveEmp.innerHTML=opts||'<option value="">Belum ada karyawan</option>';
+ payEmp.innerHTML=opts||'<option value="">Belum ada karyawan</option>';
+ payKas.innerHTML=db.kas.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('');
+ updatePayInfo();
+}
+function renderAttendance(){
+ attTable.innerHTML=db.attendance.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(a=>`<tr><td>${a.date}</td><td>${esc(employeeName(a.empId))}</td><td>${esc(attendanceLabel(a.status))}</td><td>${esc(a.note||'')}</td><td><button class="danger" onclick="delAttendance(${a.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="5">Belum ada absensi.</td></tr>';
+}
+
+function renderOvertimeSettings(){
+ db.overtimeRates=db.overtimeRates||{lembur1:1.15,lembur2:1.30};
+ ot1.value=db.overtimeRates.lembur1;
+ ot2.value=db.overtimeRates.lembur2;
+ otExample1.textContent=rp(50000*Number(db.overtimeRates.lembur1));
+ otExample2.textContent=rp(50000*Number(db.overtimeRates.lembur2));
+}
+otForm.onsubmit=e=>{
+ e.preventDefault();
+ let a=Number(ot1.value),b=Number(ot2.value);
+ if(a<0||b<0){alert('Tarif lembur tidak boleh negatif.');return}
+ db.overtimeRates={lembur1:a,lembur2:b};
+ save();render();alert('Pengaturan lembur berhasil disimpan.');
+};
+function attendanceMultiplier(status){
+ return {half:0.5,threequarter:0.75,full:1,lembur1:Number(db.overtimeRates?.lembur1??1.15),lembur2:Number(db.overtimeRates?.lembur2??1.30)}[status]||0;
+}
+function attendanceLabel(status){
+ return {half:'1/2 Hari',threequarter:'3/4 Hari',full:'Full',lembur1:'Lembur 1',lembur2:'Lembur 2',izin:'Izin',sakit:'Sakit',alpa:'Alpa',libur:'Libur'}[status]||status;
+}
+function addDays(dateStr,days){let d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+days);return d.toISOString().slice(0,10)}
+function periodEnd(start,type){
+ if(!start)return '';
+ if(type==='week')return addDays(start,6);
+ if(type==='2week')return addDays(start,13);
+ let d=new Date(start+'T00:00:00');d.setMonth(d.getMonth()+1);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);
+}
+function lastPayrollEnd(empId){
+ let rows=db.payroll.filter(p=>p.empId==empId&&p.status==='paid');
+ if(!rows.length)return '';
+ return rows.sort((a,b)=>(b.endDate||b.month||'').localeCompare(a.endDate||a.month||''))[0].endDate || rows[rows.length-1].month;
+}
+function syncPayrollStart(){
+ let emp=Number(payEmp.value);
+ if(!emp)return;
+ let last=lastPayrollEnd(emp);
+ if(last)payStart.value=addDays(last,1);
+ if(!payStart.value)payStart.value=new Date().toISOString().slice(0,10);
+ payStart.min=last?addDays(last,1):'';
+ updatePayInfo();
+}
+function updatePayInfo(){
+ let e=db.employees.find(x=>x.id==Number(payEmp.value));
+ if(!e){payInfo.textContent='Tambahkan karyawan terlebih dahulu.';return}
+ let start=payStart.value||new Date().toISOString().slice(0,10);
+ let end=periodEnd(start,payPeriod.value);
+ payEnd.value=end;
+ let last=lastPayrollEnd(e.id);
+ if(last && start<=last){payInfo.innerHTML='<b>Periode sudah pernah dibayarkan.</b> Pilih periode yang dimulai setelah '+last+'.';payTotal.value=0;return}
+ let at=db.attendance.filter(a=>a.empId==e.id&&a.date>=start&&a.date<=end);
+ let units=at.reduce((s,a)=>s+attendanceMultiplier(a.status),0);
+ let calc=units*(e.daily||0);
+ let adj=Number(payAdjust.value||0);
+ let total=Math.max(0,calc+adj);
+ payTotal.value=total;
+ let detail=at.length?at.map(a=>a.date+' '+attendanceLabel(a.status)).join(', '):'Belum ada absensi';
+ payInfo.innerHTML=`<b>${esc(e.name)}</b> — Periode: <b>${start}</b> s/d <b>${end}</b><br>Upah harian: ${rp(e.daily||0)}<br>Absensi: ${detail}<br>Total bobot: <b>${units}</b> — Upah: <b>${rp(calc)}</b> — Penyesuaian: <b>${rp(adj)}</b> — Total: <b>${rp(total)}</b>${last?'<br><span class="masuk">Pembayaran terakhir: '+last+' → periode berikutnya dimulai '+addDays(last,1)+'</span>':''}`;
+}
+function renderPayroll(){
+ payTable.innerHTML=db.payroll.slice().sort((a,b)=>(b.endDate||b.month||'').localeCompare(a.endDate||a.month||'')).map(p=>`<tr><td>${p.startDate||p.month} s/d ${p.endDate||p.month}</td><td>${esc(employeeName(p.empId))}</td><td>${rp(p.amount)}</td><td>${esc(db.kas.find(k=>k.id==p.kasId)?.name||'-')}</td><td>${p.paidDate||'-'}</td><td>${p.status==='paid'?'Dibayar':'-'}</td></tr>`).join('')||'<tr><td colspan="6">Belum ada pembayaran gaji.</td></tr>';
+}
+empForm.onsubmit=e=>{
+ e.preventDefault();
+ db.employees.push({id:Date.now(),name:empName.value.trim(),role:empRole.value.trim(),daily:Number(empDaily.value||0)});
+ save();empForm.reset();render();
+};
+function delEmployee(id){
+ if(db.attendance.some(a=>a.empId==id)||db.payroll.some(x=>x.empId==id)){alert('Karyawan sudah memiliki riwayat absensi/penggajian dan tidak bisa dihapus.');return}
+ if(confirm('Hapus karyawan?')){db.employees=db.employees.filter(e=>e.id!==id);save();render()}
+}
+attForm.onsubmit=e=>{
+ e.preventDefault();
+ if(!attEmp.value){alert('Tambahkan karyawan terlebih dahulu.');return}
+ db.attendance.push({id:Date.now(),date:attDate.value,empId:Number(attEmp.value),status:attStatus.value,note:attNote.value});
+ save();attForm.reset();attDate.value=new Date().toISOString().slice(0,10);render();alert('Absensi tersimpan.');
+};
+function delAttendance(id){if(confirm('Hapus absensi?')){db.attendance=db.attendance.filter(a=>a.id!==id);save();render()}}
+payEmp.onchange=syncPayrollStart;
+payPeriod.onchange=()=>{updatePayInfo()};
+payStart.onchange=updatePayInfo;
+payAdjust.oninput=updatePayInfo;
+payForm.onsubmit=e=>{
+ e.preventDefault();
+ if(!payEmp.value){alert('Tambahkan karyawan terlebih dahulu.');return}
+ let emp=Number(payEmp.value), kas=Number(payKas.value), amount=Number(payTotal.value||0);
+ let startDate=payStart.value, endDate=periodEnd(startDate,payPeriod.value);
+ if(!startDate||!endDate||amount<0){alert('Data gaji belum lengkap.');return}
+ let last=lastPayrollEnd(emp);
+ if(last && startDate<=last){alert('Periode ini sudah pernah dibayarkan. Pembayaran berikutnya harus dimulai setelah tanggal '+last+'.');syncPayrollStart();return}
+ let overlap=db.payroll.some(x=>x.empId==emp&&x.status==='paid'&&startDate<=(x.endDate||x.month||'')&&endDate>=(x.startDate||x.month||''));
+ if(overlap){alert('Periode penggajian bertabrakan dengan periode yang sudah dibayarkan.');return}
+ let employee=db.employees.find(x=>x.id===emp);
+ let cat=db.categories.find(c=>c.name.toLowerCase()==='gaji'&&c.type==='keluar');
+ if(!cat){cat={id:Date.now()+1,name:'Gaji',type:'keluar'};db.categories.push(cat)}
+ let payDate=new Date().toISOString().slice(0,10);
+ let payId=Date.now();
+ db.payroll.push({id:payId,periodType:payPeriod.value,startDate,endDate,empId:emp,kasId:kas,method:payMethod.value,amount,status:'paid',paidDate:payDate});
+ db.transactions.push({id:payId+1,date:payDate,type:'keluar',cat:cat.id,kasId:kas,payment:payMethod.value,amount,note:'Pembayaran gaji - '+employee.name+' ('+startDate+' s/d '+endDate+')'});
+ save();payForm.reset();payPeriod.value='week';payStart.value=addDays(endDate,1);payStart.min=payStart.value;render();alert('Gaji dibayarkan dan dicatat ke kas. Periode berikutnya otomatis dimulai '+addDays(endDate,1)+'.');
+};
+
+function renderOnline(){
+ let unpaid=db.onlinePurchases.filter(x=>x.status!=='paid').reduce((s,x)=>s+x.amount,0);
+ let paid=db.onlinePurchases.filter(x=>x.status==='paid').reduce((s,x)=>s+x.amount,0);
+ onlineUnpaid.textContent=rp(unpaid); onlinePaid.textContent=rp(paid);
+ onlineTable.innerHTML=db.onlinePurchases.slice().sort((a,b)=>b.id-a.id).map(x=>{
+   let kas=x.paidKasId?db.kas.find(k=>k.id==x.paidKasId)?.name||'-':'-';
+   return `<tr><td>${x.date}</td><td>${esc(x.store)}</td><td>${esc(x.item)}</td><td>${rp(x.amount)}</td><td>${x.due||'-'}</td><td>${x.status==='paid'?'TERBAYAR':'PENDING'}</td><td>${esc(kas)}</td><td>${x.status==='paid'?'<button class="small" disabled>Terbayar</button>':`<button class="primary" onclick="payOnline(${x.id})">Terbayar</button>`} <button class="danger" onclick="delOnline(${x.id})">Hapus</button></td></tr>`
+ }).join('')||'<tr><td colspan="8">Belum ada transaksi online.</td></tr>';
+}
+onlineForm.onsubmit=e=>{
+ e.preventDefault();
+ db.onlinePurchases.push({id:Date.now(),date:onlineDate.value,item:onlineItem.value.trim(),store:onlineStore.value.trim(),amount:Number(onlineAmount.value),due:onlineDue.value,status:onlineStatus.value,note:onlineNote.value});
+ save();onlineForm.reset();onlineDate.value=new Date().toISOString().slice(0,10);render();alert('Belanja online tersimpan.');
+};
+function toggleOnline(id){
+ let x=db.onlinePurchases.find(x=>x.id===id);if(!x)return;
+ x.status=x.status==='dibayar'?'harus':'dibayar';save();render();
+}
+function delOnline(id){if(confirm('Hapus pencatatan belanja ini?')){db.onlinePurchases=db.onlinePurchases.filter(x=>x.id!==id);save();render()}}
+
+function savingBalance(empId){
+ return db.savings.filter(x=>x.empId==empId).reduce((s,x)=>s+(x.type==='setor'?x.amount:-x.amount),0);
+}
+function renderSavings(){
+ savingBalances.innerHTML=db.employees.map(e=>`<span class="chip">${esc(e.name)} <b>${rp(savingBalance(e.id))}</b></span>`).join('')||'Belum ada karyawan.';
+ saveTable.innerHTML=db.savings.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(x=>`<tr><td>${x.date}</td><td>${esc(employeeName(x.empId))}</td><td>${x.type==='setor'?'Setoran':'Penarikan'}</td><td>${rp(x.amount)}</td><td>${esc(x.note||'')}</td><td><button class="danger" onclick="delSaving(${x.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="6">Belum ada tabungan.</td></tr>';
+}
+saveForm.onsubmit=e=>{
+ e.preventDefault();
+ if(!saveEmp.value){alert('Tambahkan karyawan terlebih dahulu.');return}
+ let emp=Number(saveEmp.value), amount=Number(saveAmount.value);
+ if(saveType.value==='tarik' && amount>savingBalance(emp)){alert('Saldo tabungan tidak mencukupi.');return}
+ db.savings.push({id:Date.now(),date:saveDate.value,empId:emp,type:saveType.value,amount,note:saveNote.value});
+ save();saveForm.reset();saveDate.value=new Date().toISOString().slice(0,10);render();alert('Transaksi tabungan tersimpan.');
+};
+function delSaving(id){if(confirm('Hapus transaksi tabungan?')){db.savings=db.savings.filter(x=>x.id!==id);save();render()}}
+
+
+function renderOnline(){
+ let unpaid=db.onlinePurchases.filter(x=>x.status!=='paid').reduce((s,x)=>s+x.amount,0);
+ let paid=db.onlinePurchases.filter(x=>x.status==='paid').reduce((s,x)=>s+x.amount,0);
+ onlineUnpaid.textContent=rp(unpaid); onlinePaid.textContent=rp(paid);
+ onlineTable.innerHTML=db.onlinePurchases.slice().sort((a,b)=>b.id-a.id).map(x=>`<tr><td>${x.date}</td><td>${esc(x.store)}</td><td>${esc(x.item)}</td><td>${rp(x.amount)}</td><td>${x.due||'-'}</td><td>${x.status==='paid'?'Terbayar':'Pending'}</td><td>${x.status==='paid'?'<button class="small" disabled>Selesai</button>':`<button class="primary" onclick="payOnline(${x.id})">Bayar</button>`} <button class="danger" onclick="delOnline(${x.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="7">Belum ada belanja online.</td></tr>';
+}
+onlineForm.onsubmit=e=>{
+ e.preventDefault();
+ db.onlinePurchases.push({id:Date.now(),date:onlineDate.value,store:onlineStore.value.trim(),item:onlineItem.value.trim(),amount:Number(onlineAmount.value),due:onlineDue.value,note:onlineNote.value,status:'unpaid'});
+ save();onlineForm.reset();onlineDate.value=new Date().toISOString().slice(0,10);render();alert('Belanja online dicatat sebagai kewajiban.');
+};
+function delOnline(id){if(confirm('Hapus catatan belanja online?')){db.onlinePurchases=db.onlinePurchases.filter(x=>x.id!==id);save();render()}}
+function payOnline(id){
+ let x=db.onlinePurchases.find(a=>a.id===id); if(!x)return;
+ let kasList=db.kas.map(k=>k.id+' = '+k.name).join('\n');
+ let kas=prompt('Pilih ID kas untuk pembayaran:\n\n'+kasList, String(db.kas[0]?.id||''));
+ let kasId=Number(kas);
+ if(!db.kas.some(k=>k.id===kasId)){alert('ID kas tidak valid.');return}
+ let cat=db.categories.find(c=>c.name.toLowerCase()==='belanja online'&&c.type==='keluar');
+ if(!cat){cat={id:Date.now()+1,name:'Belanja Online',type:'keluar'};db.categories.push(cat)}
+ db.transactions.push({id:Date.now()+2,date:new Date().toISOString().slice(0,10),type:'keluar',cat:cat.id,kasId,payment:'cash',amount:x.amount,note:'Pembayaran online - '+x.store+' - '+x.item});
+ x.status='paid';x.paidDate=new Date().toISOString().slice(0,10);x.paidKasId=kasId;x.paidMethod='cash';
+ save();render();alert('Transaksi online TERBAYAR dan otomatis masuk sebagai pengeluaran kas (Cash).');
+}
+function renderSavings(){
+ let by={};
+ db.employeeSavings.forEach(x=>{by[x.empId]=(by[x.empId]||0)+(x.type==='setor'?x.amount:-x.amount)});
+ savingBalances.innerHTML=db.employees.map(e=>`<span class="chip">${esc(e.name)} <b>${rp(by[e.id]||0)}</b></span>`).join('')||'Belum ada karyawan.';
+ savingTable.innerHTML=db.employeeSavings.slice().sort((a,b)=>b.id-a.id).map(x=>`<tr><td>${x.date}</td><td>${esc(employeeName(x.empId))}</td><td>${x.type==='setor'?'Setoran':'Penarikan'}</td><td>${rp(x.amount)}</td><td>${esc(x.note||'')}</td><td><button class="danger" onclick="delSaving(${x.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="6">Belum ada transaksi tabungan.</td></tr>';
+}
+savingForm.onsubmit=e=>{
+ e.preventDefault();
+ if(!savingEmp.value){alert('Tambahkan karyawan terlebih dahulu.');return}
+ let emp=Number(savingEmp.value), amount=Number(savingAmount.value);
+ if(savingType.value==='tarik'){
+  let bal=db.employeeSavings.filter(x=>x.empId===emp).reduce((s,x)=>s+(x.type==='setor'?x.amount:-x.amount),0);
+  if(amount>bal){alert('Penarikan melebihi saldo tabungan karyawan.');return}
+ }
+ db.employeeSavings.push({id:Date.now(),date:savingDate.value,empId:emp,type:savingType.value,amount,note:savingNote.value});
+ save();savingForm.reset();savingDate.value=new Date().toISOString().slice(0,10);render();alert('Tabungan karyawan dicatat. Tidak ada perubahan pada kas usaha.');
+};
+function delSaving(id){if(confirm('Hapus transaksi tabungan?')){db.employeeSavings=db.employeeSavings.filter(x=>x.id!==id);save();render()}}
+
+
+function renderPending(){
+ let pending=db.pendingPayments.filter(x=>x.status==='pending').reduce((s,x)=>s+x.amount,0);
+ let paid=db.pendingPayments.filter(x=>x.status==='paid').reduce((s,x)=>s+x.amount,0);
+ pendingTotal.textContent=rp(pending); pendingPaid.textContent=rp(paid);
+ pendingCat.innerHTML=db.categories.filter(c=>c.type==='masuk').map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+ pendingKas.innerHTML=db.kas.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('');
+ pendingTable.innerHTML=db.pendingPayments.slice().sort((a,b)=>b.id-a.id).map(x=>{
+   let cat=db.categories.find(c=>c.id==x.cat), kas=db.kas.find(k=>k.id==x.kasId);
+   let method=x.method==='qris'?'QRIS':'Transfer Bank';
+   return `<tr><td>${x.date}</td><td>${method}</td><td>${esc(x.source)}</td><td>${esc(cat?.name||'-')}</td><td>${rp(x.amount)}</td><td>${esc(kas?.name||'-')}</td><td>${x.status==='paid'?'TERBAYAR':'PENDING'}</td><td>${x.status==='pending'?`<button class="primary" onclick="payPending(${x.id})">Terbayar</button>`:'<button class="small" disabled>Sudah Masuk Kas</button>'} <button class="danger" onclick="delPending(${x.id})">Hapus</button></td></tr>`;
+ }).join('')||'<tr><td colspan="8">Belum ada transaksi pending.</td></tr>';
+}
+pendingForm.onsubmit=e=>{
+ e.preventDefault();
+ db.pendingPayments.push({id:Date.now(),date:pendingDate.value,method:pendingMethod.value,source:pendingSource.value.trim(),amount:Number(pendingAmount.value),cat:Number(pendingCat.value),kasId:Number(pendingKas.value),note:pendingNote.value,status:'pending'});
+ save();pendingForm.reset();pendingDate.value=new Date().toISOString().slice(0,10);render();alert('Transaksi TF/QRIS dicatat sebagai PENDING dan belum masuk kas.');
+};
+function payPending(id){
+ let x=db.pendingPayments.find(a=>a.id===id); if(!x)return;
+ let kasId=Number(prompt('ID kas tujuan pembayaran. Lihat daftar kas di menu Multi Kas.',String(x.kasId)));
+ if(!db.kas.some(k=>k.id===kasId)){alert('ID kas tidak valid.');return}
+ let cat=db.categories.find(c=>c.id==x.cat);
+ if(!cat){cat={id:Date.now()+1,name:'Pemasukan TF/QRIS',type:'masuk'};db.categories.push(cat)}
+ db.transactions.push({id:Date.now()+2,date:new Date().toISOString().slice(0,10),type:'masuk',cat:cat.id,kasId,payment:x.method,amount:x.amount,note:'TF/QRIS terbayar - '+x.source+(x.note?' - '+x.note:'')});
+ x.status='paid';x.paidDate=new Date().toISOString().slice(0,10);x.kasId=kasId;
+ save();render();alert('Transaksi berhasil ditandai TERBAYAR dan otomatis masuk ke kas.');
+}
+function delPending(id){if(confirm('Hapus transaksi TF/QRIS ini?')){db.pendingPayments=db.pendingPayments.filter(x=>x.id!==id);save();render()}}
+
+function renderTfQris(){
+ let pi=db.tfQris.filter(x=>x.status==='pending'&&x.type==='masuk').reduce((s,x)=>s+x.amount,0);
+ let po=db.tfQris.filter(x=>x.status==='pending'&&x.type==='keluar').reduce((s,x)=>s+x.amount,0);
+ tfPendingIn.textContent=rp(pi); tfPendingOut.textContent=rp(po);
+ tfCategory.innerHTML=db.categories.filter(c=>c.type===tfType.value).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+ const labels={transfer:'Transfer Bank',qris:'QRIS'};
+ tfTable.innerHTML=db.tfQris.slice().sort((a,b)=>b.id-a.id).map(x=>{
+   let c=db.categories.find(c=>c.id==x.cat);
+   return `<tr><td>${x.date}</td><td class="${x.type}">${x.type==='masuk'?'MASUK':'KELUAR'}</td><td>${labels[x.method]}</td><td>${esc(c?.name||'-')}</td><td>${esc(x.note||'')}</td><td>${rp(x.amount)}</td><td>${x.status==='pending'?`<button class="primary" onclick="settleTfQris(${x.id})">Terbayar</button>`:'<span class="chip">Terbayar → Kas</span>'} <button class="danger" onclick="delTfQris(${x.id})">Hapus</button></td></tr>`
+ }).join('')||'<tr><td colspan="7">Belum ada transaksi TF/QRIS.</td></tr>';
+}
+tfType.onchange=renderTfQris;
+tfForm.onsubmit=e=>{
+ e.preventDefault();
+ if(!tfCategory.value){alert('Kategori belum tersedia.');return}
+ db.tfQris.push({id:Date.now(),date:tfDate.value,type:tfType.value,method:tfMethod.value,cat:Number(tfCategory.value),amount:Number(tfAmount.value),note:tfNote.value,status:'pending'});
+ save();tfForm.reset();tfDate.value=new Date().toISOString().slice(0,10);render();alert('Transaksi TF/QRIS disimpan sebagai Pending dan belum masuk kas.');
+};
+function settleTfQris(id){
+ let x=db.tfQris.find(a=>a.id===id); if(!x)return;
+ let list=db.kas.map(k=>`${k.id} = ${k.name}`).join('\\n');
+ let kas=prompt('Pilih ID kas tujuan/sumber:\\n'+list);
+ let kasId=Number(kas);
+ if(!db.kas.some(k=>k.id===kasId)){alert('ID kas tidak valid.');return}
+ let cat=db.categories.find(c=>c.id==x.cat);
+ db.transactions.push({id:Date.now()+1,date:new Date().toISOString().slice(0,10),type:x.type,cat:x.cat,kasId,payment:x.method,amount:x.amount,note:x.note||((x.method==='qris'?'QRIS':'Transfer Bank')+' - transaksi terbayar')});
+ x.status='paid';x.paidDate=new Date().toISOString().slice(0,10);x.kasId=kasId;
+ save();render();alert('Transaksi sudah Terbayar dan otomatis masuk ke kas.');
+}
+function delTfQris(id){if(confirm('Hapus transaksi TF/QRIS?')){db.tfQris=db.tfQris.filter(x=>x.id!==id);save();render()}}
+function renderTrxPending(){
+ let pending=db.trxPending.filter(x=>x.status==='pending').reduce((s,x)=>s+x.amount,0);
+ let paid=db.trxPending.filter(x=>x.status==='paid').reduce((s,x)=>s+x.amount,0);
+ trxPendingTotal.textContent=rp(pending);
+ trxPendingPaid.textContent=rp(paid);
+ trxPendingKas.innerHTML=db.kas.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('');
+ trxPendingTable.innerHTML=db.trxPending.slice().sort((a,b)=>b.id-a.id).map(x=>{
+   let kas=db.kas.find(k=>k.id==x.kasId);
+   return `<tr><td>${esc(x.name)}</td><td>${rp(x.amount)}</td><td>${esc(kas?.name||'-')}</td><td>${x.status==='paid'?'TERBAYAR':'PENDING'}</td><td>${x.status==='pending'?`<button class="primary" onclick="payTrxPending(${x.id})">Terbayar</button>`:'<button class="small" disabled>Sudah Masuk Kas</button>'} <button class="danger" onclick="delTrxPending(${x.id})">Hapus</button></td></tr>`;
+ }).join('')||'<tr><td colspan="5">Belum ada transaksi pending.</td></tr>';
+}
+trxPendingForm.onsubmit=e=>{
+ e.preventDefault();
+ let amount=Number(trxPendingAmount.value||0);
+ if(amount<=0){alert('Nominal harus lebih dari 0.');return}
+ db.trxPending.push({id:Date.now(),name:trxPendingName.value.trim(),amount,kasId:Number(trxPendingKas.value),status:'pending'});
+ save();trxPendingForm.reset();render();alert('Transaksi disimpan sebagai PENDING dan belum masuk kas.');
+};
+function payTrxPending(id){
+ let x=db.trxPending.find(a=>a.id===id); if(!x)return;
+ if(x.status==='paid')return;
+ let kasId=Number(x.kasId);
+ if(!db.kas.some(k=>k.id===kasId)){alert('Kas transaksi sudah tidak tersedia. Silakan pilih kas lain di Multi Kas lalu coba lagi.');return}
+ let cat=db.categories.find(c=>c.name.toLowerCase()==='trx pending'&&c.type==='masuk');
+ if(!cat){cat={id:Date.now()+1,name:'Trx Pending',type:'masuk'};db.categories.push(cat)}
+ db.transactions.push({id:Date.now()+2,date:new Date().toISOString().slice(0,10),type:'masuk',cat:cat.id,kasId,payment:'cash',amount:x.amount,note:x.name});
+ x.status='paid';x.paidDate=new Date().toISOString().slice(0,10);
+ save();render();alert('Transaksi TERBAYAR dan otomatis masuk ke pencatatan kas.');
+}
+function delTrxPending(id){
+ if(confirm('Hapus transaksi pending ini?')){
+   db.trxPending=db.trxPending.filter(x=>x.id!==id);save();render();
+ }
+}
+
+function renderTx(){
+ let q=(cari.value||'').toLowerCase(), m=filterTanggal.value, jt=filterJenis.value;
+ let a=db.transactions.filter(x=>(!q||(x.note+' '+(db.categories.find(c=>c.id==x.cat)?.name||'')+' '+(db.kas.find(k=>k.id==x.kasId)?.name||'')).toLowerCase().includes(q))&&(!m||x.date.startsWith(m))&&(!jt||x.type===jt)).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+ const pay={cash:'Cash'};
+ txTable.innerHTML=a.map(x=>{let c=db.categories.find(c=>c.id==x.cat),k=db.kas.find(k=>k.id==x.kasId);return `<tr><td>${x.date}</td><td class="${x.type}">${x.type==='masuk'?'MASUK':'KELUAR'}</td><td>${esc(k?.name||'-')}</td><td>${pay[x.payment]||'Cash'}</td><td>${esc(c?.name||'-')}</td><td>${esc(x.note)}</td><td>${rp(x.amount)}</td><td><button class="small" onclick="editTx(${x.id})">Edit</button> <button class="danger" onclick="delTx(${x.id})">Hapus</button></td></tr>`}).join('')||'<tr><td colspan="8">Belum ada transaksi.</td></tr>';
+}
+function renderCats(){catKas.innerHTML='<option value="">Pilih Nama Kas</option>'+db.kas.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('');catTable.innerHTML=db.categories.map(c=>{let k=db.kas.find(k=>k.id==c.kasId);return `<tr><td>${esc(c.name)}</td><td>${c.type==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${esc(k?.name||'-')}</td><td><button class="danger" onclick="delCat(${c.id})">Hapus</button></td></tr>`}).join('')||'<tr><td colspan="4">Belum ada kategori.</td></tr>'}
+function renderKas(){
+ let total=db.transactions.reduce((s,x)=>s+(x.type==='masuk'?x.amount:-x.amount),0);
+ saldoKas.innerHTML=db.kas.map(k=>{let s=db.transactions.filter(x=>x.kasId==k.id).reduce((a,x)=>a+(x.type==='masuk'?x.amount:-x.amount),0);return `<span class="chip">${esc(k.name)} <b>${rp(s)}</b></span>`}).join('')||'Belum ada kas.';
+ kasTable.innerHTML=db.kas.map(k=>{let s=db.transactions.filter(x=>x.kasId==k.id).reduce((a,x)=>a+(x.type==='masuk'?x.amount:-x.amount),0);return `<tr><td>${esc(k.name)}</td><td>${rp(s)}</td><td><button class="danger" onclick="delKas(${k.id})">Hapus</button></td></tr>`}).join('');
+}
+let chartHarianObj,chartBulananObj,chartTahunanObj;
+function sumIncome(filterFn){return db.transactions.filter(x=>x.type==='masuk'&&filterFn(x)).reduce((s,x)=>s+Number(x.amount||0),0)}
+function makeChart(id,labels,data,gradient){
+ const el=document.getElementById(id); if(!el||typeof Chart==='undefined')return;
+ const ctx=el.getContext('2d');
+ const g=ctx.createLinearGradient(0,0,0,280); g.addColorStop(0,gradient[0]); g.addColorStop(1,gradient[1]);
+ return new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pendapatan',data,fill:true,backgroundColor:g,borderColor:gradient[0],borderWidth:3,pointRadius:3,pointHoverRadius:6,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' Rp'+Number(c.raw||0).toLocaleString('id-ID')}}},scales:{x:{grid:{display:false},ticks:{maxRotation:0}},y:{beginAtZero:true,ticks:{callback:v=>'Rp'+Number(v).toLocaleString('id-ID')}}}}});
+}
+function renderDashboardCharts(){
+ const now=new Date(), end=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const dayLabels=[],dayData=[];
+ for(let i=29;i>=0;i--){let d=new Date(end);d.setDate(end.getDate()-i);let key=d.toISOString().slice(0,10);dayLabels.push(d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'}));dayData.push(sumIncome(x=>x.date===key));}
+ const monthLabels=[],monthData=[];
+ for(let i=11;i>=0;i--){let d=new Date(now.getFullYear(),now.getMonth()-i,1);let key=d.toISOString().slice(0,7);monthLabels.push(d.toLocaleDateString('id-ID',{month:'short',year:'numeric'}));monthData.push(sumIncome(x=>x.date.startsWith(key)));}
+ const years=[...new Set(db.transactions.map(x=>x.date.slice(0,4)))].sort();
+ const current=now.getFullYear(); if(!years.length)years.push(String(current));
+ const yearLabels=years,yearData=years.map(y=>sumIncome(x=>x.date.startsWith(y)));
+ [chartHarianObj,chartBulananObj,chartTahunanObj].forEach(c=>{if(c)c.destroy()});
+ chartHarianObj=makeChart('chartHarian',dayLabels,dayData,['#2563eb','#bfdbfe']);
+ chartBulananObj=makeChart('chartBulanan',monthLabels,monthData,['#7c3aed','#ddd6fe']);
+ chartTahunanObj=makeChart('chartTahunan',yearLabels,yearData,['#059669','#bbf7d0']);
+}
+
+function renderDailyIncomeTable(){
+ const picker=document.getElementById('incomeMonth');
+ const head=document.getElementById('dailyIncomeHead');
+ const body=document.getElementById('dailyIncomeBody');
+ const summary=document.getElementById('incomeMonthSummary');
+ if(!picker||!head||!body||!summary)return;
+ const now=new Date();
+ if(!picker.value)picker.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+ const month=picker.value;
+ if(!/^\d{4}-\d{2}$/.test(month))return;
+ const [yy,mm]=month.split('-').map(Number);
+ const days=new Date(yy,mm,0).getDate();
+ const kasList=db.kas||[];
+ head.innerHTML='<tr><th>Tanggal</th>'+kasList.map(k=>`<th>${esc(k.name)}</th>`).join('')+'<th>Total Harian</th></tr>';
+ const totals=Object.fromEntries(kasList.map(k=>[k.id,0]));
+ let monthTotal=0;
+ const rows=[];
+ for(let day=1;day<=days;day++){
+  const date=month+'-'+String(day).padStart(2,'0');
+  const dailyByKas={};
+  kasList.forEach(k=>dailyByKas[k.id]=0);
+  db.transactions.filter(t=>t.type==='masuk'&&t.date===date).forEach(t=>{
+   const id=kasList.find(k=>k.id==t.kasId)?.id;
+   if(id!==undefined){dailyByKas[id]+=Number(t.amount||0);totals[id]+=Number(t.amount||0);}
+  });
+  const dailyTotal=Object.values(dailyByKas).reduce((a,b)=>a+b,0);
+  monthTotal+=dailyTotal;
+  rows.push(`<tr><td>${date}</td>${kasList.map(k=>`<td>${rp(dailyByKas[k.id])}</td>`).join('')}<td><b>${rp(dailyTotal)}</b></td></tr>`);
+ }
+ body.innerHTML=rows.join('')+`<tr style="background:#eef2ff"><th>Total Bulan</th>${kasList.map(k=>`<th>${rp(totals[k.id])}</th>`).join('')}<th>${rp(monthTotal)}</th></tr>`;
+ summary.textContent='Total pemasukan '+new Date(yy,mm-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'})+': '+rp(monthTotal);
+}
+document.getElementById('incomeMonth')?.addEventListener('change',renderDailyIncomeTable);
+
+function renderRingkas(){let now=new Date(),m=now.toISOString().slice(0,7),a=db.transactions.filter(x=>x.date.startsWith(m));let i=a.filter(x=>x.type==='masuk').reduce((s,x)=>s+x.amount,0),o=a.filter(x=>x.type==='keluar').reduce((s,x)=>s+x.amount,0);bulanRingkas.innerHTML=`<p>Pemasukan bulan ini: <b>${rp(i)}</b></p><p>Pengeluaran bulan ini: <b>${rp(o)}</b></p><p>Selisih: <b>${rp(i-o)}</b></p>`;terbaru.innerHTML=db.transactions.slice().sort((a,b)=>b.id-a.id).slice(0,5).map(x=>`<p>${x.date} — ${x.type==='masuk'?'+':'-'} ${rp(x.amount)}</p>`).join('')||'Belum ada transaksi.'}
+function renderLap(){let type=lapJenis.value||'bulan', d=lapTanggal.value||new Date().toISOString().slice(0,10), a=db.transactions.filter(x=>type==='tahun'?x.date.startsWith(d.slice(0,4)):type==='bulan'?x.date.startsWith(d.slice(0,7)):x.date===d);let i=a.filter(x=>x.type==='masuk').reduce((s,x)=>s+x.amount,0),o=a.filter(x=>x.type==='keluar').reduce((s,x)=>s+x.amount,0);let by={};a.forEach(x=>{let c=db.categories.find(c=>c.id==x.cat)?.name||'-';by[c]=(by[c]||0)+(x.type==='masuk'?x.amount:-x.amount)});laporanBox.innerHTML=`<h3>${type==='tahun'?'Tahun':'Periode'} ${esc(type==='tahun'?d.slice(0,4):type==='bulan'?d.slice(0,7):d)}</h3><p>Pemasukan: <b>${rp(i)}</b> &nbsp; Pengeluaran: <b>${rp(o)}</b> &nbsp; Selisih: <b>${rp(i-o)}</b></p><table><tr><th>Kategori</th><th>Selisih</th></tr>${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${rp(v)}</td></tr>`).join('')||'<tr><td colspan="2">Tidak ada data.</td></tr>'}</table>`}
+
+function editTx(id){
+ let x=db.transactions.find(t=>t.id===id);
+ if(!x)return;
+ editId.value=x.id;
+ editTanggal.value=x.date;
+ editJenis.value=x.type;
+ editNominal.value=x.amount;
+ editKet.value=x.note||'';
+ editMetode.value='cash';
+ editKas.innerHTML=db.kas.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join('');
+ editKas.value=x.kasId||db.kas[0]?.id;
+ editKategori.innerHTML=db.categories.filter(c=>c.type===x.type && (c.kasId==null || c.kasId==Number(editKas.value))).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+ editKategori.value=x.cat;
+ editModal.classList.add('show');
+}
+function closeEdit(){editModal.classList.remove('show')}
+editKas.onchange=()=>{editKategori.innerHTML=db.categories.filter(c=>c.type===editJenis.value && (c.kasId==null || c.kasId==Number(editKas.value))).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')};
+editJenis.onchange=()=>{
+ editKategori.innerHTML=db.categories.filter(c=>c.type===editJenis.value && (c.kasId==null || c.kasId==Number(editKas.value))).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+};
+editForm.onsubmit=e=>{
+ e.preventDefault();
+ let x=db.transactions.find(t=>t.id===Number(editId.value));
+ if(!x)return;
+ x.date=editTanggal.value;
+ x.type=editJenis.value;
+ x.cat=Number(editKategori.value);
+ x.kasId=Number(editKas.value);
+ x.payment=editMetode.value;
+ x.amount=Number(editNominal.value);
+ x.note=editKet.value;
+ save(); closeEdit(); render();
+ alert('Perubahan transaksi berhasil disimpan.');
+};
+editModal.addEventListener('click',e=>{if(e.target===editModal)closeEdit()});
+
+function delTx(id){if(confirm('Hapus transaksi ini?')){db.transactions=db.transactions.filter(x=>x.id!==id);save();render()}}
+function delKas(id){
+ if(db.transactions.some(x=>x.kasId==id)){alert('Kas masih memiliki transaksi dan tidak bisa dihapus.');return}
+ if(db.kas.length<=1){alert('Minimal harus ada satu kas.');return}
+ if(confirm('Hapus kas ini?')){db.kas=db.kas.filter(x=>x.id!==id);save();render()}
+}
+kasForm.onsubmit=e=>{e.preventDefault();let n=kasName.value.trim();if(!n)return;if(db.kas.some(k=>k.name.toLowerCase()===n.toLowerCase())){alert('Nama kas sudah ada.');return}db.kas.push({id:Date.now(),name:n});save();kasForm.reset();render()};
+function delCat(id){if(db.transactions.some(x=>x.cat==id)){alert('Kategori masih dipakai transaksi dan tidak bisa dihapus.');return}if(confirm('Hapus kategori?')){db.categories=db.categories.filter(x=>x.id!==id);save();render()}}
+txForm.onsubmit=e=>{e.preventDefault();db.transactions.push({id:Date.now(),date:tanggal.value,type:jenis.value,cat:Number(kategoriTx.value),kasId:Number(kasTx.value),payment:metodeTx.value,amount:Number(nominal.value),note:ket.value});save();txForm.reset();tanggal.value=new Date().toISOString().slice(0,10);render();alert('Transaksi tersimpan.')};
+jenis.onchange=render;[cari,filterTanggal,filterJenis].forEach(x=>x.addEventListener('input',renderTx));[lapJenis,lapTanggal].forEach(x=>x.addEventListener('input',renderLap));
+catForm.onsubmit=e=>{e.preventDefault();db.categories.push({id:Date.now(),name:catName.value.trim(),type:catType.value,kasId:catKas.value?Number(catKas.value):null});save();catForm.reset();render()};
+function renderBEOL(){
+ if(!db.beolRecords)db.beolRecords=[];
+ const pending=db.beolRecords.filter(x=>x.status!=='LUNAS').reduce((s,x)=>s+Number(x.amount||0),0);
+ const lunas=db.beolRecords.filter(x=>x.status==='LUNAS').reduce((s,x)=>s+Number(x.amount||0),0);
+ document.getElementById('beolPendingTotal').textContent=rp(pending);
+ document.getElementById('beolLunasTotal').textContent=rp(lunas);
+ const q=(document.getElementById('beolSearch')?.value||'').toLowerCase();
+ const f=document.getElementById('beolFilter')?.value||'';
+ const rows=db.beolRecords.filter(x=>(!f||x.status===f)&&(!q||`${x.store} ${x.item} ${x.note||''}`.toLowerCase().includes(q))).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b.id-a.id);
+ document.getElementById('beolTable').innerHTML=rows.map(x=>`<tr><td>${esc(x.date||'-')}</td><td>${esc(x.store)}</td><td>${esc(x.item)}</td><td>${rp(x.amount)}</td><td>${esc(x.due||'-')}</td><td><b class="${x.status==='LUNAS'?'masuk':'keluar'}">${x.status==='LUNAS'?'LUNAS':'PENDING'}</b></td><td>${esc(x.note||'-')}</td><td><button class="small" onclick="toggleBEOL(${x.id})">${x.status==='LUNAS'?'Jadikan PENDING':'Tandai LUNAS'}</button> <button class="danger" onclick="delBEOL(${x.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="8">Belum ada catatan BEOL.</td></tr>';
+}
+document.getElementById('beolForm').onsubmit=e=>{
+ e.preventDefault();
+ db.beolRecords.push({id:Date.now(),date:document.getElementById('beolDate').value,store:document.getElementById('beolStore').value.trim(),item:document.getElementById('beolItem').value.trim(),amount:Number(document.getElementById('beolAmount').value),due:document.getElementById('beolDue').value,status:document.getElementById('beolStatus').value,note:document.getElementById('beolNote').value.trim()});
+ save();e.target.reset();document.getElementById('beolDate').value=new Date().toISOString().slice(0,10);document.getElementById('beolStatus').value='PENDING';renderBEOL();alert('Catatan BEOL tersimpan. Tidak ada perubahan pada kas.');
+};
+function toggleBEOL(id){const x=db.beolRecords.find(a=>a.id===id);if(!x)return;x.status=x.status==='LUNAS'?'PENDING':'LUNAS';save();renderBEOL()}
+function delBEOL(id){if(confirm('Hapus catatan BEOL ini?')){db.beolRecords=db.beolRecords.filter(x=>x.id!==id);save();renderBEOL()}}
+document.getElementById('beolSearch').addEventListener('input',renderBEOL);
+document.getElementById('beolFilter').addEventListener('change',renderBEOL);
+
+function exportData(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='backup-vio-finance.json';a.click()}
+importFile.onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(x.transactions&&x.categories){db=x;if(!db.kas)db.kas=[{id:1,name:'Kas Umum'}];db.transactions.forEach(t=>{if(!t.kasId)t.kasId=db.kas[0].id;if(!t.payment)t.payment='cash'});save();render();alert('Backup berhasil diimpor.')}else throw 0}catch(_){alert('File backup tidak valid.')}};r.readAsText(f)}
+function exportCSV(){let rows=[['Tanggal','Jenis','Kas','Metode Pembayaran','Kategori','Keterangan','Nominal']];db.transactions.forEach(x=>rows.push([x.date,x.type,db.kas.find(k=>k.id==x.kasId)?.name||'','cash',db.categories.find(c=>c.id==x.cat)?.name||'',x.note,x.amount]));let csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='transaksi-vio-finance.csv';a.click()}
+function hapusSemua(){if(confirm('SEMUA transaksi dan kategori akan dihapus. Lanjut?')){db={transactions:[],categories:[],kas:[{id:1,name:'Kas Umum'}]};save();render()}}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(b.dataset.page).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')});
+tanggal.value=new Date().toISOString().slice(0,10);attDate.value=tanggal.value;onlineDate.value=tanggal.value;document.getElementById('beolDate').value=tanggal.value;saveDate.value=tanggal.value;lapTanggal.value=tanggal.value;payPeriod.value='week';payStart.value=new Date().toISOString().slice(0,10);updatePayInfo();document.querySelector('nav button').click();bootCloud();
+</script></body></html>
